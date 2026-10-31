@@ -1,23 +1,611 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>My Jenkins CI/CD Project</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Amit | Jenkins CI/CD Dashboard</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #0f172a;
+    color: #f8fafc;
+    min-height: 100vh;
+}
+
+/* NAVBAR */
+.navbar {
+    background: #111c33;
+    padding: 20px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    border-bottom: 1px solid #263650;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: bold;
+    color: #38bdf8;
+}
+
+.logo span {
+    color: white;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.nav-buttons button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #cbd5e1;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.nav-buttons button:hover,
+.nav-buttons button.active {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+}
+
+/* HERO */
+.hero {
+    padding: 75px 8% 55px;
+    background: linear-gradient(120deg, #172554, #312e81, #164e63);
+    text-align: center;
+}
+
+.hero .tag {
+    display: inline-block;
+    background: rgba(34,197,94,0.15);
+    color: #4ade80;
+    padding: 9px 18px;
+    border-radius: 30px;
+    margin-bottom: 22px;
+    font-size: 13px;
+}
+
+.hero h1 {
+    font-size: clamp(30px, 5vw, 48px);
+    margin-bottom: 18px;
+}
+
+.hero h1 span {
+    color: #38bdf8;
+}
+
+.hero p {
+    color: #cbd5e1;
+    font-size: 17px;
+    line-height: 1.8;
+    max-width: 700px;
+    margin: auto;
+}
+
+.hero-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 13px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn-primary {
+    background: #38bdf8;
+    color: #082f49;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid #94a3b8;
+    color: white;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    opacity: 0.9;
+}
+
+/* MAIN CONTENT */
+.container {
+    padding: 45px 8%;
+    max-width: 1250px;
+    margin: auto;
+}
+
+.section-title {
+    font-size: 27px;
+    margin-bottom: 12px;
+}
+
+.section-subtitle {
+    color: #94a3b8;
+    margin-bottom: 28px;
+    line-height: 1.6;
+}
+
+/* STATUS CARDS */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 20px;
+    margin-bottom: 45px;
+}
+
+.card {
+    background: #1e293b;
+    padding: 25px;
+    border-radius: 14px;
+    border: 1px solid #334155;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: #38bdf8;
+}
+
+.card-icon {
+    font-size: 30px;
+    margin-bottom: 15px;
+}
+
+.card h3 {
+    font-size: 16px;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+}
+
+.card p {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.green { color: #4ade80; }
+.blue { color: #38bdf8; }
+.purple { color: #c084fc; }
+.orange { color: #fb923c; }
+
+/* CONTENT PANEL */
+.panel {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 25px;
+}
+
+.panel h3 {
+    margin-bottom: 18px;
+    color: #38bdf8;
+}
+
+.panel p {
+    color: #cbd5e1;
+    line-height: 1.8;
+}
+
+.pipeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.pipeline-step {
+    background: #27364e;
+    border: 1px solid #475569;
+    border-radius: 10px;
+    padding: 20px 10px;
+    text-align: center;
+    color: #e2e8f0;
+    font-size: 14px;
+}
+
+.pipeline-step span {
+    display: block;
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+/* TAB CONTENT */
+.tab-content {
+    display: none;
+    animation: fade 0.4s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fade {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 25px;
+    background: #111c33;
+    color: #94a3b8;
+    border-top: 1px solid #263650;
+    margin-top: 35px;
+}
+
+footer span {
+    color: #38bdf8;
+    font-weight: bold;
+}
+
+@media(max-width: 600px) {
+    .navbar {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .hero {
+        padding: 55px 6%;
+    }
+
+    .container {
+        padding: 30px 5%;
+    }
+}
+</style>
 </head>
 
 <body>
 
-    <h1>Hello from Jenkins CI/CD</h1>
+<!-- NAVIGATION -->
+<nav class="navbar">
 
-    <h2>Updated Application on Windows Tomcat Server</h2>
+    <div class="logo">⚡ Jenkins<span>Flow</span></div>
 
-    <p>This page is automatically deployed using GitHub and Jenkins.</p>
+    <div class="nav-buttons">
+        <button class="active" onclick="showTab('home', this)">Home</button>
+        <button onclick="showTab('pipeline', this)">Pipeline</button>
+        <button onclick="showTab('deployment', this)">Deployment</button>
+        <button onclick="showTab('about', this)">About Me</button>
+    </div>
 
-    <p>Deployment status: Updated Successfully</p>
+</nav>
 
-    <p>Created By Amit Pachpute</p>
+<!-- HERO -->
+<header class="hero">
+
+    <div class="tag">● CI/CD AUTOMATION PROJECT</div>
+
+    <h1>Welcome to <span>Amit's</span> DevOps Dashboard</h1>
+
+    <p>
+        Automating application deployment using GitHub, Jenkins
+        and Apache Tomcat on Windows Server.
+        Build, backup, deploy and test your application through CI/CD.
+    </p>
+
+    <div class="hero-actions">
+        <button class="btn btn-primary"
+        onclick="showTab('pipeline', document.querySelectorAll('.nav-buttons button')[1])">
+            Explore Pipeline →
+        </button>
+
+        <a class="btn btn-secondary"
+        href="https://github.com/amitpachpute2510/jenkins-tomcat-demo"
+        target="_blank">
+            View GitHub ↗
+        </a>
+    </div>
+
+</header>
+
+<main class="container">
+
+<!-- HOME TAB -->
+<section id="home" class="tab-content active">
+
+    <h2 class="section-title">Dashboard Overview</h2>
+
+    <p class="section-subtitle">
+        Monitor your Jenkins CI/CD project and application deployment.
+    </p>
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="card-icon">⚙️</div>
+            <h3>CI/CD Tool</h3>
+            <p class="blue">Jenkins</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">🐙</div>
+            <h3>Source Control</h3>
+            <p class="purple">GitHub</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">🚀</div>
+            <h3>Application Server</h3>
+            <p class="orange">Apache Tomcat</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">🌐</div>
+            <h3>Deployment Status</h3>
+            <p class="green">Successful</p>
+        </div>
+
+    </div>
+
+    <div class="panel">
+        <h3>🎯 Project Objective</h3>
+        <p>
+            This project demonstrates automated deployment of a web
+            application from GitHub to Apache Tomcat using Jenkins.
+            It includes source code checkout, HTML validation,
+            backup management, deployment and HTTP testing.
+        </p>
+    </div>
+
+    <div class="panel">
+        <h3>🛠️ Technologies Used</h3>
+        <p>
+            GitHub &nbsp; | &nbsp; Jenkins &nbsp; | &nbsp;
+            Apache Tomcat &nbsp; | &nbsp; Windows Server
+            &nbsp; | &nbsp; PowerShell &nbsp; | &nbsp; HTML &nbsp; | &nbsp; CSS
+        </p>
+    </div>
+
+</section>
+
+
+<!-- PIPELINE TAB -->
+<section id="pipeline" class="tab-content">
+
+    <h2 class="section-title">CI/CD Pipeline</h2>
+
+    <p class="section-subtitle">
+        Six stages of automated application delivery.
+    </p>
+
+    <div class="panel">
+        <h3>⚡ Pipeline Execution Flow</h3>
+
+        <div class="pipeline">
+
+            <div class="pipeline-step">
+                <span>🐙</span>
+                GitHub Checkout
+            </div>
+
+            <div class="pipeline-step">
+                <span>🔍</span>
+                HTML Validation
+            </div>
+
+            <div class="pipeline-step">
+                <span>📦</span>
+                Build Backup
+            </div>
+
+            <div class="pipeline-step">
+                <span>💾</span>
+                Deployment Backup
+            </div>
+
+            <div class="pipeline-step">
+                <span>🚀</span>
+                Tomcat Deployment
+            </div>
+
+            <div class="pipeline-step">
+                <span>✅</span>
+                Application Testing
+            </div>
+
+        </div>
+    </div>
+
+    <div class="panel">
+        <h3>🔄 Automated Workflow</h3>
+        <p>
+            1. Developer updates index.html.<br>
+            2. Changes are pushed to GitHub main branch.<br>
+            3. Jenkins detects changes using SCM polling.<br>
+            4. Jenkins validates the HTML file.<br>
+            5. Build and deployment backups are created.<br>
+            6. Latest application is deployed to Tomcat.<br>
+            7. HTTP response is tested.
+        </p>
+    </div>
+
+</section>
+
+
+<!-- DEPLOYMENT TAB -->
+<section id="deployment" class="tab-content">
+
+    <h2 class="section-title">Deployment Information</h2>
+
+    <p class="section-subtitle">
+        Windows Server application deployment configuration.
+    </p>
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="card-icon">🖥️</div>
+            <h3>Server</h3>
+            <p class="blue">Windows</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">🔌</div>
+            <h3>Tomcat Port</h3>
+            <p class="orange">8686</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">📁</div>
+            <h3>Application</h3>
+            <p class="purple">jenkins-tomcat-demo</p>
+        </div>
+
+    </div>
+
+    <div class="panel">
+        <h3>🌐 Application URL</h3>
+        <p>
+            http://localhost:8686/jenkins-tomcat-demo/
+        </p>
+        <br>
+        <a href="http://localhost:8686/jenkins-tomcat-demo/"
+        target="_blank" class="btn btn-primary">
+            Open Application ↗
+        </a>
+    </div>
+
+    <div class="panel">
+        <h3>💾 Backup Configuration</h3>
+        <p>
+            Build Backup: tomcat-html-backup/build_backup<br>
+            Deployment Backup: tomcat-html-backup/deployment_backup
+        </p>
+    </div>
+
+</section>
+
+
+<!-- ABOUT TAB -->
+<section id="about" class="tab-content">
+
+    <h2 class="section-title">About Me</h2>
+
+    <p class="section-subtitle">
+        The person behind this CI/CD automation project.
+    </p>
+
+    <div class="panel" style="text-align:center; padding:45px 20px;">
+
+        <div style="
+            width:100px;
+            height:100px;
+            border-radius:50%;
+            background:linear-gradient(135deg,#2563eb,#9333ea);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin:0 auto 20px;
+            font-size:40px;
+            font-weight:bold;">
+            A
+        </div>
+
+        <h2 style="font-size:29px; margin-bottom:12px;">
+            Amit Pachpute
+        </h2>
+
+        <p style="color:#38bdf8; margin-bottom:20px;">
+            Data Engineering | Application Support | DevOps
+        </p>
+
+        <p>
+            Interested in application deployment, database management,
+            automation, data engineering and enterprise technology.
+        </p>
+
+        <br>
+
+        <a href="https://github.com/amitpachpute2510"
+        target="_blank" class="btn btn-primary">
+            Visit My GitHub ↗
+        </a>
+
+    </div>
+
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <p>
+        Designed & Developed by
+        <span>Amit Pachpute</span>
+    </p>
+
+    <p style="margin-top:8px; font-size:12px;">
+        Jenkins CI/CD Automation | GitHub | Apache Tomcat
+    </p>
+
+    <p style="margin-top:8px; font-size:12px;">
+        © <span id="year"></span> All Rights Reserved.
+    </p>
+</footer>
+
+
+<!-- JAVASCRIPT -->
+<script>
+
+function showTab(tabId, clickedButton) {
+
+    // Hide all sections
+    document.querySelectorAll('.tab-content').forEach(section => {
+        section.classList.remove('active');
+    });
+
+    // Remove active button style
+    document.querySelectorAll('.nav-buttons button').forEach(button => {
+        button.classList.remove('active');
+    });
+
+    // Show selected section
+    document.getElementById(tabId).classList.add('active');
+
+    // Activate selected button
+    clickedButton.classList.add('active');
+
+    // Scroll to top
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Dynamic current year
+document.getElementById('year').textContent =
+    new Date().getFullYear();
+
+</script>
 
 </body>
-
 </html>
